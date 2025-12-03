@@ -1,5 +1,7 @@
 from flask import Flask, redirect, render_template
 
+from helpers import fetch_pokemon_generation
+
 app = Flask(__name__)
 
 @app.route("/")
@@ -10,7 +12,8 @@ def index():
 @app.route("/pokedex")
 def pokedex():
     #TODO: Have a list of all pokemon broken down by generations
-    return render_template("/pokedex.html")
+    pokemons = fetch_pokemon_generation(1)
+    return render_template("/pokedex.html", pokemons=pokemons)
 
 @app.route("/pokemon")
 def pokemon():

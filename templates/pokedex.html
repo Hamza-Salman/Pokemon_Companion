@@ -3,6 +3,17 @@
 {% block main %}
 
 <h1>Pokedex</h1>
-
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+{% for pokemon in pokemons %}
+    <div class="col">
+        <div class="card h-100 shadow-sm">
+                <img src="{{ pokemon['sprite'] }}" class="card-img-top" alt="{{ pokemon['name'] }}">
+                <div class="card-body text-center">
+                <h5 class="card-title">#{{ pokemon['id'] }}. {{ pokemon['name'] }}</h5>
+            </div>
+        </div>
+    </div>
+{% endfor %}
+</div>
 
 {% endblock %}
