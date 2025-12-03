@@ -1,0 +1,9 @@
+{% extends 'layout.html' %}
+
+{% block main %}
+
+<h1>{{ pokemon_data["name"] }}</h1>
+<img src="{{ pokemon_data['sprite'] }}" alt="{{ pokemon_data['name'] }}" style="height: 200px; image-rendering: pixelated !important;">
+<img src="{{ pokemon_data['shiny'] }}" alt="Shiny {{ pokemon_data['name'] }}" style="height: 200px; image-rendering: pixelated !important;">
+
+{% endblock %}

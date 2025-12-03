@@ -1,6 +1,6 @@
-from flask import Flask, redirect, render_template
+from flask import Flask, redirect, render_template, request
 
-from helpers import fetch_pokemon_generation
+from helpers import fetch_pokemon_generation, fetch_pokemon_data
 
 app = Flask(__name__)
 
@@ -15,8 +15,12 @@ def pokedex():
     pokemons = fetch_pokemon_generation(1)
     return render_template("/pokedex.html", pokemons=pokemons)
 
-@app.route("/pokemon")
+@app.route("/pokemon", methods=["GET", "POST"])
 def pokemon():
+    if request.method == "POST":
+        pokemon_name = request.form.get("pokemon_name")
+        pokemon_data = fetch_pokemon_data(pokemon_name)
+        return render_template("/pokemon.html", pokemon_data=pokemon_data)
     #TODO: 
     return "Hello, World!"
 

@@ -14,7 +14,8 @@ def fetch_pokemon_generation(gen):
         pokemons = []
         for pokemon in data['pokemon_species']:
             pokemon_data = fetch_pokemon_data(pokemon['name'])
-            pokemons.append({"name" : pokemon['name'], "id": pokemon_data['id'], "sprite": pokemon_data['sprite']})
+            if pokemon_data:
+                pokemons.append({"name" : pokemon['name'], "id": pokemon_data['id'], "sprite": pokemon_data['sprite']})
         pokemons.sort(key=lambda x: x['id'])
         return pokemons
     except requests.exceptions.RequestException as e:
@@ -31,6 +32,7 @@ def fetch_pokemon_data(pokemon_name):
             "name": data['name'],
             "id": data['id'],
             "sprite": data['sprites']['front_default'],
+            "shiny": data['sprites']['front_shiny']
         }
         return pokemon_info
     except requests.exceptions.RequestException as e:

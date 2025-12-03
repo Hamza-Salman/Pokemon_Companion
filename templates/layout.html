@@ -10,6 +10,9 @@
     body {
       overflow-x: hidden;
     }
+    img {
+      image-rendering: pixelated !important;
+    }
     /* Sidebar styling */
     #sidebar {
       min-width: 200px;
@@ -53,7 +56,7 @@
     </div>
   </nav>
 
-  <div class="d-flex">
+  <div class="d-flex" style="z-index: 10;">
     <!-- Sidebar -->
     <div id="sidebar">
       <h5>Menu</h5>
