@@ -3,7 +3,25 @@
 {% block main %}
 
 <h1>Pokedex</h1>
-<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+<form action="/pokedex" method="POST" class="mb-4">
+    <div class="input-group">
+        <Select name="generation" class="form-select">
+            <option selected disabled>Select Generation</option>
+            <option value="all">All Generations</option>>           
+            <option value="1">Generation 1</option>
+            <option value="2">Generation 2</option>
+            <option value="3">Generation 3</option>
+            <option value="4">Generation 4</option>
+            <option value="5">Generation 5</option>
+            <option value="6">Generation 6</option>
+            <option value="7">Generation 7</option>
+            <option value="8">Generation 8</option>
+            <option value="9">Generation 9</option>
+        </Select>
+        <button class="btn btn-primary" type="submit">Search</button>
+    </div>
+    <br>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-6 g-4">
 {% for pokemon in pokemons %}
 
     <div class="col">
