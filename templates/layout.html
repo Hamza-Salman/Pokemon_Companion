@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Simple Layout</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      overflow-x: hidden;
+    }
+    /* Sidebar styling */
+    #sidebar {
+      min-width: 200px;
+      max-width: 200px;
+      min-height: 100vh;
+      background: #f8f9fa;
+      padding: 1rem;
+    }
+    /* Content styling */
+    #content {
+      padding: 1rem;
+    }
+    @media (max-width: 768px) {
+      #sidebar {
+        position: absolute;
+        left: -200px;
+        transition: all 0.3s;
+      }
+      #sidebar.active {
+        left: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="/">Pokemon Companion</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item"><a class="nav-link active" href="/">Home</a></li>
+          <li class="nav-item"><a class="nav-link" href="#">Login</a></li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="d-flex">
+    <!-- Sidebar -->
+    <div id="sidebar">
+      <h5>Menu</h5>
+      <ul class="nav flex-column">
+        <li class="nav-item"><a class="nav-link" href="/pokedex">Pokedex</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Battle Helper</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Team</a></li>
+      </ul>
+    </div>
+
+    <!-- Main content -->
+    <div id="content" class="flex-grow-1">
+      {% block main %} {% endblock %}
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Sidebar toggle for small screens
+    const sidebar = document.getElementById('sidebar');
+    const toggler = document.querySelector('.navbar-toggler');
+    toggler.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+    });
+  </script>
+</body>
+</html>
