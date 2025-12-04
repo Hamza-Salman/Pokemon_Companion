@@ -1,2 +1,4 @@
 /__pycache__
 TODO.txt
+/flask_session/
+pokemonCompanion.db

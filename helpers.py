@@ -3,6 +3,7 @@ import json
 import os
 from flask import redirect, render_template
 from functools import wraps
+import sqlite3
 
 CACHE_FILE = "pokemon_cache.json"
 
@@ -112,3 +113,22 @@ def fetch_evoltion_chain(pokemon_name):
     except requests.exceptions.RequestException as e:
         print(f"Error fetching evolution chain for {pokemon_name}: {e}")
         return []
+    
+
+def query_db(query):
+
+    connection = sqlite3.connect("pokemonCompanion.db")
+    cursor = connection.cursor()
+
+    results = []
+    try:
+        cursor.execute(query)
+        results = cursor.fetchall()
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")
+    
+    finally:
+        connection.close()
+
+
+    return results

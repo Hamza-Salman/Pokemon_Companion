@@ -1,15 +1,23 @@
 from flask import Flask, redirect, render_template, request
 import json
-
-from helpers import fetch_pokemon_generation, fetch_pokemon_data, fetch_evoltion_chain
+from helpers import fetch_pokemon_generation, fetch_pokemon_data, fetch_evoltion_chain, query_db
+from flask_session import Session
 
 app = Flask(__name__)
+
+# Configure session to use filesystem (instead of signed cookies)
+app.config["SESSION_PERMANENT"] = False
+app.config["SESSION_TYPE"] = "filesystem"
+Session(app)
+
 
 NUM_GENS = 9
 
 @app.route("/")
 def index():
     #TODO: Homepage. Have info on project and features
+    database_test = query_db("SELECT * FROM users;")
+    print(database_test)
     return render_template('/index.html')
 
 @app.route("/pokedex", methods=["GET", "POST"])
