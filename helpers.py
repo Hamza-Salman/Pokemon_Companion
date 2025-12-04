@@ -115,20 +115,23 @@ def fetch_evoltion_chain(pokemon_name):
         return []
     
 
-def query_db(query):
-
+def query_db(query, params=(), commit=False):
     connection = sqlite3.connect("pokemonCompanion.db")
+    connection.row_factory = sqlite3.Row  # return rows as dict-like objects
     cursor = connection.cursor()
 
-    results = []
     try:
-        cursor.execute(query)
-        results = cursor.fetchall()
+        cursor.execute(query, params)
+
+        if commit:
+            connection.commit()
+            return None
+
+        return cursor.fetchall()
+
     except sqlite3.Error as e:
-        print(f"Database error: {e}")
-    
+        print(f"Database error: {e}\nQuery: {query}")
+        return None
+
     finally:
         connection.close()
-
-
-    return results

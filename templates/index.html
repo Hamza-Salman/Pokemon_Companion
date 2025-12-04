@@ -3,6 +3,9 @@
 {% block main %}
 
 <h1>Welcome to the Pokemon Companion App</h1>
+{% if session["user_id"] %}
+    <h2>User: {{ session["username"] }} </h2>
+{% endif %}
 <p>The pokemon companion app is a project that I am working on as my final project for Harvard's CS50 Course</p>
 <h2>Key Features</h2>
 
