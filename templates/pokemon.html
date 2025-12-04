@@ -1,9 +1,132 @@
-{% extends 'layout.html' %}
+{% extends "layout.html" %}
 
 {% block main %}
 
-<h1>{{ pokemon_data["name"] }}</h1>
-<img src="{{ pokemon_data['sprite'] }}" alt="{{ pokemon_data['name'] }}" style="height: 200px; image-rendering: pixelated !important;">
-<img src="{{ pokemon_data['shiny'] }}" alt="Shiny {{ pokemon_data['name'] }}" style="height: 200px; image-rendering: pixelated !important;">
+<style>
+    .pokemon-card {
+        border-radius: 20px;
+        padding: 20px;
+        background: white;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .pokemon-img {
+        image-rendering: pixelated;
+        max-width: 200px;
+    }
+    .chip {
+        display: inline-block;
+        padding: 6px 12px;
+        margin: 3px;
+        background: #e8e8e8;
+        border-radius: 12px;
+        font-size: 0.9rem;
+    }
+</style>
+
+<div class="container py-3">
+
+    <!-- Header -->
+    <div class="text-center mb-4">
+        <h1 class="fw-bold">{{ pokemon.name | title }}</h1>
+        <h5 class="text-muted">#{{ pokemon.id }}</h5>
+    </div>
+
+    <!-- Main Pokémon Card -->
+    <div class="pokemon-card row align-items-center">
+
+        <!-- Pokémon Images -->
+        <div class="col-md-5 text-center">
+
+            <h5 class="fw-semibold mb-2">Sprites</h5>
+
+            <div class="d-flex justify-content-center gap-4">
+
+                <!-- Regular -->
+                <div class="text-center">
+                    <img 
+                        src="{{ pokemon.sprite }}" 
+                        alt="{{ pokemon.name }} (Regular)"
+                        class="pokemon-img"
+                    >
+                    <div class="mt-1 text-muted small">Regular</div>
+                </div>
+
+                <!-- Shiny -->
+                <div class="text-center">
+                    <img 
+                        src="{{ pokemon.shiny }}" 
+                        alt="{{ pokemon.name }} (Shiny)"
+                        class="pokemon-img"
+                    >
+                    <div class="mt-1 text-warning small">Shiny ✨</div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Info Section -->
+        <div class="col-md-7">
+
+            <!-- Types -->
+            <h4 class="mt-3">Types</h4>
+            {% for type in pokemon.types %}
+                <span class="type-badge type-{{ type }}">
+                    {{ type }}
+                </span>
+            {% endfor %}
+
+            <!-- Abilities -->
+            <h4 class="mt-3">Abilities</h4>
+            {% for ability in pokemon.abilities %}
+                <span class="chip">{{ ability }}</span>
+            {% endfor %}
+
+            <!-- Cries -->
+            <h4 class="mt-3">Cries</h4>
+            {% if pokemon.cries %}
+                <audio controls>
+                    <source src="{{ pokemon.cries }}" type="audio/ogg">
+                </audio>
+            {% else %}
+                <p>No cry available.</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Moves Section -->
+    <div class="pokemon-card mt-4">
+        <h3 class="fw-bold">Moves</h3>
+        <div class="d-flex flex-wrap">
+            {% for move in pokemon.moves %}
+                <span class="chip">{{ move }}</span>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Evolutions Section -->
+    <div class="pokemon-card mt-4">
+        <h3 class="fw-bold">Evolutions</h3>
+
+        {% if pokemon.evolutions %}
+            <div class="d-flex flex-wrap align-items-center">
+                {% for evo in pokemon.evolutions %}
+                    <div class="text-center p-3">
+                        <img 
+                            src="{{ evo.picture_url }}" 
+                            class="img-fluid"
+                            style="max-width:120px;"
+                        >
+                        <p class="mt-2 fw-semibold">{{ evo.name | title }}</p>
+                        <small class="text-muted">#{{ evo.id }}</small>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No evolution data.</p>
+        {% endif %}
+    </div>
+
+</div>
 
 {% endblock %}

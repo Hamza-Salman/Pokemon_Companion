@@ -52,7 +52,10 @@ def fetch_pokemon_data(pokemon_name):
             "name": data['name'],
             "id": data['id'],
             "sprite": data['sprites']['front_default'],
-            "shiny": data['sprites']['front_shiny']
+            "shiny": data['sprites']['front_shiny'],
+            "types": [t['type']['name'] for t in data['types']],
+            "abilities": [a['ability']['name'] for a in data['abilities']],
+            "moves": [m['move']['name'] for m in data['moves']]
         }
 
         pokemon_cache[pokemon_name] = pokemon_info

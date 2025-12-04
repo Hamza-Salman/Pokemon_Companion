@@ -33,7 +33,7 @@ def pokemon():
     if request.method == "POST":
         pokemon_name = request.form.get("pokemon_name")
         pokemon_data = fetch_pokemon_data(pokemon_name)
-        return render_template("/pokemon.html", pokemon_data=pokemon_data)
+        return render_template("/pokemon.html", pokemon=pokemon_data)
     #TODO: 
     return "Hello, World!"
 
