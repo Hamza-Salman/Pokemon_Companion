@@ -30,3 +30,9 @@
 .type-steel    { background-color: #B7B7CE; }
 .type-fairy    { background-color: #D685AD; }
 
+.navbar,
+.navbar-collapse,
+.offcanvas {
+    position: relative;
+    z-index: 2000 !important;
+}
