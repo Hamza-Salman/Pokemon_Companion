@@ -83,14 +83,14 @@
             {% endfor %}
 
             <!-- Cries -->
-            <h4 class="mt-3">Cries</h4>
+            <!-- <h4 class="mt-3">Cries</h4>
             {% if pokemon.cries %}
                 <audio controls>
                     <source src="{{ pokemon.cries }}" type="audio/ogg">
                 </audio>
             {% else %}
                 <p>No cry available.</p>
-            {% endif %}
+            {% endif %} -->
         </div>
     </div>
 
@@ -108,17 +108,17 @@
     <div class="pokemon-card mt-4">
         <h3 class="fw-bold">Evolutions</h3>
 
-        {% if pokemon.evolutions %}
+        {% if evolutions %}
             <div class="d-flex flex-wrap align-items-center">
-                {% for evo in pokemon.evolutions %}
+                {% for evolution in evolutions %}
                     <div class="text-center p-3">
                         <img 
-                            src="{{ evo.picture_url }}" 
+                            src="{{ evolution.sprite }}" 
                             class="img-fluid"
                             style="max-width:120px;"
                         >
-                        <p class="mt-2 fw-semibold">{{ evo.name | title }}</p>
-                        <small class="text-muted">#{{ evo.id }}</small>
+                        <p class="mt-2 fw-semibold">{{ evolution.name | title }}</p>
+                        <small class="text-muted">#{{ evolution.id }}</small>
                     </div>
                 {% endfor %}
             </div>

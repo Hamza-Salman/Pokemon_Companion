@@ -16,7 +16,7 @@ def save_cache(cache):
     with open(CACHE_FILE, "w") as f:
         json.dump(cache, f)
 
-
+# ================= This method fetches the data for the generations for the pokedex page and caches it (USES /generation api call) =================
 def fetch_pokemon_generation(gen):
     url = f"https://pokeapi.co/api/v2/generation/{gen}/"
 
@@ -34,6 +34,7 @@ def fetch_pokemon_generation(gen):
     except requests.exceptions.RequestException as e:
         print(f"Error fetching generation {gen}: {e}")
 
+# ================= This method fetches the data for the individual pokemon (USES /pokemon api call) =================
 def fetch_pokemon_data(pokemon_name):
 
     pokemon_cache = load_cache()
@@ -65,3 +66,49 @@ def fetch_pokemon_data(pokemon_name):
     except requests.exceptions.RequestException as e:
         print(f"Error fetching data for {pokemon_name}: {e}")
         return None
+    
+# ================= This method fetches the data for the individual pokemons evolution chain (USES /pokemon-species api call) =================
+# ================= This method also fetches the data for the individual pokemons evolutions using evolution chain (USES /evolution-chain api call) =================
+def fetch_evoltion_chain(pokemon_name):
+    url = f"https://pokeapi.co/api/v2/pokemon-species/{pokemon_name}/"
+
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        data = response.json()
+        #chain url from species api call
+        evolution_chain_url = data['evolution_chain']['url']
+
+        #chain data from evolution chain api call
+        response = requests.get(evolution_chain_url)
+        response.raise_for_status()
+        evo_data = response.json()
+
+        chain = []
+        branches = []
+        current = evo_data['chain']
+
+        while current:
+            species_name = current['species']['name']
+            chain.append(species_name)
+            # Gets all the branches for pokemons that have multiple evolution variations
+            if (len(current['evolves_to']) > 1):
+                print("Branched evolution detected.")
+                for branch in current['evolves_to']:
+                    branches.append(branch['species']['name'])
+                    print(f"Branch: {branch['species']['name']}")
+                current = current['evolves_to'][0]
+            elif current['evolves_to']:
+                current = current['evolves_to'][0]
+            else:
+                current = None
+        
+        #added branched evolutions to chain
+        for branch in branches:
+            if branch not in chain:
+                chain.append(branch)
+
+        return chain
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching evolution chain for {pokemon_name}: {e}")
+        return []

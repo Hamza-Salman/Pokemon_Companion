@@ -1,7 +1,7 @@
 from flask import Flask, redirect, render_template, request
 import json
 
-from helpers import fetch_pokemon_generation, fetch_pokemon_data
+from helpers import fetch_pokemon_generation, fetch_pokemon_data, fetch_evoltion_chain
 
 app = Flask(__name__)
 
@@ -33,7 +33,17 @@ def pokemon():
     if request.method == "POST":
         pokemon_name = request.form.get("pokemon_name")
         pokemon_data = fetch_pokemon_data(pokemon_name)
-        return render_template("/pokemon.html", pokemon=pokemon_data)
+
+        # gets evolutions
+        evolutions = []
+        evolution_chain = fetch_evoltion_chain(pokemon_name)
+        for pokemon in evolution_chain:
+            evolution_data = fetch_pokemon_data(pokemon)
+            if evolution_data:
+                evolutions.append(evolution_data)
+
+
+        return render_template("/pokemon.html", pokemon=pokemon_data, evolutions=evolutions)
     #TODO: 
     return "Hello, World!"
 
