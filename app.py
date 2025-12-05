@@ -153,31 +153,68 @@ def create_team():
             if request.form.get(f"slot{i}"):
                 team.append(request.form.get(f"slot{i}"))
             else:
-                team.append(None)
+                team.append("blank")
 
         #check if all team slots are empty
-        if all(pokemon is None for pokemon in team):
+        if all(pokemon == "blank" for pokemon in team):
             return render_template("/error.html", error="Team is empty")
         
-        if request.form.get("team_name"):
-            print(team_name)
-        print(team)
-        return render_template("/error.html", error="Functionality not implemented.")
+        if not request.form.get("team_name"):
+            return render_template("/error.html", error="Team name is empty")
+
+        #create user team first
+        query_db("INSERT INTO user_teams (user_id, team_name) VALUES (?, ?)", (session["user_id"], team_name), commit=True)
+        team_id = query_db("SELECT id FROM user_teams WHERE user_id = ? AND team_name = ?", (session["user_id"], team_name))[0]["id"]
+
+        #then create team with pokemon
+        for slot, pokemon in enumerate(team, start=1):
+            if pokemon != "blank":
+                query_db("INSERT INTO team (team_id, slot, pokemon_name) VALUES (?, ?, ?)", (team_id, slot, pokemon), commit=True)
+
+        return redirect("/teams")
     else:
         pokemons = []
         for i in range(1, NUM_GENS+1):
                 pokemons += fetch_pokemon_generation(i)
         return render_template("/create-team.html", pokemons=pokemons)
 
-@app.route("/team-manager")
+@app.route("/teams", methods=["GET", "POST"])
 def team():
     #TODO: 
-    return "Hello, World!"
+
+    if not session:
+        return redirect("/login")
+    
+    if request.method == "POST":
+        return render_template("/error.html", error="TODO")
+    else:
+        #get all the team data and the pokemon data for each team
+        teams = query_db("SELECT * FROM user_teams WHERE user_id = ?", (session["user_id"],))
+        teams_data = []
+        for team in teams:
+            team_id = team["id"]
+            team_name = team["team_name"]
+            pokemons = []
+            pokemons_names = query_db("SELECT * FROM team WHERE team_id = ?", (team_id,))
+            for index, pokemon in enumerate(pokemons_names):
+                pokemon_data = fetch_pokemon_data(pokemon["pokemon_name"])
+                if pokemon_data:
+                    pokemons.append(pokemon_data)
+            teams_data.append({"team_id": team_id, "team_name": team_name, "pokemon": pokemons})
+                
+        return render_template("/teams.html", teams=teams_data)
 
 @app.route("/battle-helper")
 def battle():
     #TODO: 
     return "Hello, World!"
+
+@app.route("/delete_team", methods=["POST"])
+def delete_team():
+    team_id = request.form.get("team_id")
+    query_db("DELETE FROM team WHERE team_id = ?", (team_id,), commit=True)
+    query_db("DELETE FROM user_teams WHERE id = ?", (team_id,), commit=True)
+    return redirect("/teams")
 
 
 if __name__ == "__main__":
