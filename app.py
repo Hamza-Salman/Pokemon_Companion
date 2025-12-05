@@ -27,7 +27,7 @@ def pokedex():
         gen = request.form.get("generation")
         pokemons = []
         if gen == "all":
-            for i in range(1, NUM_GENS):
+            for i in range(1, NUM_GENS+1):
                 pokemons += fetch_pokemon_generation(i)
         else:
             pokemons = fetch_pokemon_generation(gen)
@@ -138,7 +138,38 @@ def logout():
 
     return redirect("/")
 
-@app.route("/team")
+@app.route("/create-team", methods=["GET", "POST"])
+def create_team():
+    #TODO: 
+
+    if not session:
+        return redirect("/login")
+
+    if request.method == "POST":
+        #get team name and all slots of the team
+        team_name = request.form.get("team_name")
+        team = []
+        for i in range(1, 7):
+            if request.form.get(f"slot{i}"):
+                team.append(request.form.get(f"slot{i}"))
+            else:
+                team.append(None)
+
+        #check if all team slots are empty
+        if all(pokemon is None for pokemon in team):
+            return render_template("/error.html", error="Team is empty")
+        
+        if request.form.get("team_name"):
+            print(team_name)
+        print(team)
+        return render_template("/error.html", error="Functionality not implemented.")
+    else:
+        pokemons = []
+        for i in range(1, NUM_GENS+1):
+                pokemons += fetch_pokemon_generation(i)
+        return render_template("/create-team.html", pokemons=pokemons)
+
+@app.route("/team-manager")
 def team():
     #TODO: 
     return "Hello, World!"

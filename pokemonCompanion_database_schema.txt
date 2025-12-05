@@ -1,0 +1,23 @@
+CREATE TABLE users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
+    username TEXT NOT NULL, 
+    hash TEXT NOT NULL
+);
+CREATE UNIQUE INDEX username ON users (username);
+
+CREATE TABLE user_teams (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER NOT NULL,
+    team_name TEXT NOT NULL,
+    FOREIGN KEY(user_id) REFERENCES users(id)
+);
+
+CREATE TABLE team (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    team_id INTEGER NOT NULL,
+    pokemon_number INTEGER NOT NULL,
+    pokemon_name TEXT NOT NULL,
+    slot INTEGER NOT NULL CHECK (slot BETWEEN 1 AND 6),
+    FOREIGN KEY(team_id) REFERENCES teams(id),
+    UNIQUE(team_id, slot)
+);

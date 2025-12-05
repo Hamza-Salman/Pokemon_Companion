@@ -1,0 +1,63 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+<h1>Create Your Pokemon Team</h1>
+
+<form action="/create-team" method="POST">
+
+    <div class="mb-4">
+        <label class="form-label fw-bold">Team Name</label>
+        <input type="text" name="team_name" class="form-control" placeholder="Enter team name" required>
+    </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
+
+        {% for i in range(1, 7) %}
+        <div class="col">
+            <div class="card h-100 shadow-sm p-3">
+
+                <h5 class="text-center fw-bold">Slot {{ i }}</h5>
+
+                <select name="slot{{ i }}" class="form-select mb-3 pokemon-select">
+                    <option value="blank" selected>-- Select Pokemon --</option>
+                    {% for pokemon in pokemons %}
+                    <option value="{{ pokemon['name'] }}">{{ pokemon['id'] }} - {{ pokemon['name'] }}</option>
+                    {% endfor %}
+                </select>
+
+                <button type="button"
+                        class="btn btn-outline-danger w-100 clear-btn"
+                        data-slot="{{ i }}">
+                    Clear Slot
+                </button>
+
+            </div>
+        </div>
+        {% endfor %}
+
+    </div>
+
+    <div class="text-center mt-4">
+        <button type="submit" class="btn btn-primary btn-lg px-5">
+            Save Team
+        </button>
+    </div>
+
+</form>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        document.querySelectorAll(".clear-btn").forEach(btn => {
+            btn.addEventListener("click", () => {
+                let slot = btn.dataset.slot;
+                let selectElement = document.querySelector(`select[name="slot${slot}"]`);
+                if (selectElement) {
+                    selectElement.value = "";
+                }
+            });
+        });
+    });
+</script>
+
+{% endblock %}
