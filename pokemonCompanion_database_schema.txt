@@ -11,11 +11,11 @@ CREATE TABLE user_teams (
     team_name TEXT NOT NULL,
     FOREIGN KEY(user_id) REFERENCES users(id)
 );
+CREATE UNIQUE INDEX idx_teams_user_name ON user_teams (user_id, team_name);
 
 CREATE TABLE team (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     team_id INTEGER NOT NULL,
-    pokemon_number INTEGER NOT NULL,
     pokemon_name TEXT NOT NULL,
     slot INTEGER NOT NULL CHECK (slot BETWEEN 1 AND 6),
     FOREIGN KEY(team_id) REFERENCES teams(id),
