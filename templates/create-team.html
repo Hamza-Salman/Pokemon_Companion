@@ -11,6 +11,13 @@
         <input type="text" name="team_name" class="form-control" placeholder="Enter team name" required>
     </div>
 
+    <!-- 🔎 Global Search Bar -->
+    <div class="mb-4">
+        <label class="form-label fw-bold">Search Pokémon</label>
+        <input type="text" id="pokemon-search" class="form-control" placeholder="Search... (e.g., Pikachu)">
+        <small class="text-muted">Filters all dropdowns as you type.</small>
+    </div>
+
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-4">
 
         {% for i in range(1, 7) %}
@@ -21,9 +28,16 @@
 
                 <select name="slot{{ i }}" class="form-select mb-3 pokemon-select">
                     <option value="blank" selected>-- Select Pokemon --</option>
+
                     {% for pokemon in pokemons %}
-                    <option value="{{ pokemon['name'] }}">{{ pokemon['id'] }} - {{ pokemon['name'] }}</option>
+                    <option 
+                        value="{{ pokemon['name'] }}"
+                        data-name="{{ pokemon['name'] | lower }}"
+                    >
+                        {{ pokemon['id'] }} - {{ pokemon['name'] }}
+                    </option>
                     {% endfor %}
+
                 </select>
 
                 <button type="button"
@@ -48,15 +62,39 @@
 
 <script>
     document.addEventListener("DOMContentLoaded", () => {
+
+        /* ----------------------------
+           CLEAR SLOT BUTTONS
+        ---------------------------- */
         document.querySelectorAll(".clear-btn").forEach(btn => {
             btn.addEventListener("click", () => {
-                let slot = btn.dataset.slot;
-                let selectElement = document.querySelector(`select[name="slot${slot}"]`);
-                if (selectElement) {
-                    selectElement.value = "";
+                const slot = btn.dataset.slot;
+                const select = document.querySelector(`select[name="slot${slot}"]`);
+
+                if (select) {
+                    select.value = "blank";
                 }
             });
         });
+
+        // script to narrow down pokemon dropdown lists.
+        const searchInput = document.getElementById("pokemon-search");
+
+        searchInput.addEventListener("input", () => {
+            const search = searchInput.value.toLowerCase();
+
+            document.querySelectorAll(".pokemon-select option").forEach(opt => {
+                if (opt.value === "blank") {
+                    opt.hidden = false;
+                    return;
+                }
+
+                const name = opt.dataset.name; // already lowercased
+
+                opt.hidden = !name.includes(search);
+            });
+        });
+
     });
 </script>
 
