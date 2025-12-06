@@ -5,16 +5,18 @@ from flask import redirect, render_template
 from functools import wraps
 import sqlite3
 
-CACHE_FILE = "pokemon_cache.json"
+POKEMON_CACHE_FILE = "pokemon_cache.json"
+MOVE_CACHE_FILE = "move_cache.json"
 
-def load_cache():
-    if os.path.exists(CACHE_FILE):
-        with open(CACHE_FILE, "r") as f:
+
+def load_cache(file):
+    if os.path.exists(file):
+        with open(file, "r") as f:
             return json.load(f)
     return {}
 
-def save_cache(cache):
-    with open(CACHE_FILE, "w") as f:
+def save_cache(cache, file):
+    with open(file, "w") as f:
         json.dump(cache, f)
 
 # ================= This method fetches the data for the generations for the pokedex page and caches it (USES /generation api call) =================
@@ -38,7 +40,7 @@ def fetch_pokemon_generation(gen):
 # ================= This method fetches the data for the individual pokemon (USES /pokemon api call) =================
 def fetch_pokemon_data(pokemon_name):
 
-    pokemon_cache = load_cache()
+    pokemon_cache = load_cache(POKEMON_CACHE_FILE)
 
     if pokemon_name in pokemon_cache:
         return pokemon_cache[pokemon_name]
@@ -57,11 +59,11 @@ def fetch_pokemon_data(pokemon_name):
             "shiny": data['sprites']['front_shiny'],
             "types": [t['type']['name'] for t in data['types']],
             "abilities": [a['ability']['name'] for a in data['abilities']],
-            "moves": [m['move']['name'] for m in data['moves']]
+            "moves": [get_move_data(m['move']['name']) for m in data['moves']]
         }
 
         pokemon_cache[pokemon_name] = pokemon_info
-        save_cache(pokemon_cache)
+        save_cache(pokemon_cache, POKEMON_CACHE_FILE)
 
         return pokemon_info
     except requests.exceptions.RequestException as e:
@@ -114,6 +116,35 @@ def fetch_evoltion_chain(pokemon_name):
         print(f"Error fetching evolution chain for {pokemon_name}: {e}")
         return []
     
+
+def get_move_data(move_name):
+    url = f"https://pokeapi.co/api/v2/move/{move_name}/"
+
+    move_cache = load_cache(MOVE_CACHE_FILE)
+
+    if move_name in move_cache:
+        return move_cache[move_name]
+
+    try:
+        print(f"Fetching data for move: {move_name} from API.")
+        response = requests.get(url)
+        response.raise_for_status()
+        data = response.json()
+        move_info = {
+            "name": data['name'],
+            "type": data['type']['name'],
+            "power": data['power'],
+            "accuracy": data['accuracy'],
+            "pp": data['pp']
+        }
+
+        move_cache[move_name] = move_info
+        save_cache(move_cache, MOVE_CACHE_FILE)
+
+        return move_info
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching move data for {move_name}: {e}")
+        return None
 
 def query_db(query, params=(), commit=False):
     connection = sqlite3.connect("pokemonCompanion.db")

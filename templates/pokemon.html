@@ -21,6 +21,35 @@
         border-radius: 12px;
         font-size: 0.9rem;
     }
+
+    /* Type Badge Styling (matches previous approach) */
+    .type-badge {
+        display: inline-block;
+        padding: 5px 12px;
+        margin-right: 6px;
+        color: white;
+        border-radius: 12px;
+        font-size: 0.9rem;
+        text-transform: capitalize;
+    }
+    .type-normal   { background:#A8A77A; }
+    .type-fire     { background:#EE8130; }
+    .type-water    { background:#6390F0; }
+    .type-electric { background:#F7D02C; }
+    .type-grass    { background:#7AC74C; }
+    .type-ice      { background:#96D9D6; }
+    .type-fighting { background:#C22E28; }
+    .type-poison   { background:#A33EA1; }
+    .type-ground   { background:#E2BF65; }
+    .type-flying   { background:#A98FF3; }
+    .type-psychic  { background:#F95587; }
+    .type-bug      { background:#A6B91A; }
+    .type-rock     { background:#B6A136; }
+    .type-ghost    { background:#735797; }
+    .type-dragon   { background:#6F35FC; }
+    .type-dark     { background:#705746; }
+    .type-steel    { background:#B7B7CE; }
+    .type-fairy    { background:#D685AD; }
 </style>
 
 <div class="container py-3">
@@ -71,9 +100,7 @@
             <!-- Types -->
             <h4 class="mt-3">Types</h4>
             {% for type in pokemon.types %}
-                <span class="type-badge type-{{ type }}">
-                    {{ type }}
-                </span>
+                <span class="type-badge type-{{ type }}">{{ type }}</span>
             {% endfor %}
 
             <!-- Abilities -->
@@ -82,26 +109,45 @@
                 <span class="chip">{{ ability }}</span>
             {% endfor %}
 
-            <!-- Cries -->
-            <!-- <h4 class="mt-3">Cries</h4>
-            {% if pokemon.cries %}
-                <audio controls>
-                    <source src="{{ pokemon.cries }}" type="audio/ogg">
-                </audio>
-            {% else %}
-                <p>No cry available.</p>
-            {% endif %} -->
         </div>
     </div>
 
-    <!-- Moves Section -->
+    <!-- Moves Section (refactored) -->
     <div class="pokemon-card mt-4">
         <h3 class="fw-bold">Moves</h3>
-        <div class="d-flex flex-wrap">
-            {% for move in pokemon.moves %}
-                <span class="chip">{{ move }}</span>
-            {% endfor %}
+
+        {% if pokemon.moves %}
+        <div class="table-responsive mt-3">
+            <table class="table table-striped align-middle text-center">
+                <thead class="table-dark">
+                    <tr>
+                        <th scope="col">Move</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">Power</th>
+                        <th scope="col">Accuracy</th>
+                        <th scope="col">PP</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for move in pokemon.moves %}
+                    <tr>
+                        <td>{{ move.name | title }}</td>
+                        <td>
+                            <span class="type-badge type-{{ move.type }}">
+                                {{ move.type }}
+                            </span>
+                        </td>
+                        <td>{{ move.power if move.power else "-" }}</td>
+                        <td>{{ move.accuracy if move.accuracy else "-" }}</td>
+                        <td>{{ move.pp }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
+        {% else %}
+            <p>No moves found.</p>
+        {% endif %}
     </div>
 
     <!-- Evolutions Section -->
