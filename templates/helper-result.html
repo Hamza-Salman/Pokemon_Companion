@@ -1,0 +1,133 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+<style>
+    .pokemon-card-mini {
+        border-radius: 10px;
+        padding: 8px;
+        background: white;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        text-align: center;
+        height: 100%;
+    }
+
+    .pokemon-sprite-sm {
+        max-width: 80px;
+        image-rendering: pixelated;
+    }
+
+    /* Strength Highlighting */
+    .strength-strong {
+        border: 3px solid #4CAF50 !important; /* green */
+    }
+    .strength-neutral {
+        border: 3px solid #FFC107 !important; /* yellow */
+    }
+    .strength-weak {
+        border: 3px solid #F44336 !important; /* red */
+    }
+</style>
+
+<div class="container py-3">
+
+    <!-- Opponent Pokémon -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body text-center">
+
+            <h1 class="fw-bold">{{ opponent.name | title }}</h1>
+            <h5 class="text-muted">#{{ opponent.id }}</h5>
+
+            <!-- Types -->
+            <div class="mb-3">
+                {% for t in opponent.types %}
+                <span class="type-badge type-{{ t }}">{{ t }}</span>
+                {% endfor %}
+            </div>
+
+            <img src="{{ opponent.sprite }}" class="pokemon-img mb-3" alt="{{ opponent.name }}">
+
+            <!-- Type Effectiveness -->
+            <div class="mt-3">
+                <h5 class="fw-semibold">Takes Double Damage From:</h5>
+                {% if double_effective_types %}
+                    {% for t in double_effective_types %}
+                        <span class="type-badge type-{{ t }}">{{ t }}</span>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">None</p>
+                {% endif %}
+            </div>
+
+            <div class="mt-3">
+                <h5 class="fw-semibold">Takes Half Damage From:</h5>
+                {% if half_effective_types %}
+                    {% for t in half_effective_types %}
+                        <span class="type-badge type-{{ t }}">{{ t }}</span>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">None</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Teams -->
+    <h2 class="fw-bold mb-3">Your Teams</h2>
+
+    {% if teams %}
+        <div class="row g-4">
+
+            {% for team in teams %}
+            <div class="col-12">
+                <div class="card shadow-sm">
+
+                    <!-- Team Header -->
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4 class="m-0">{{ team.team_name }}</h4>
+                    </div>
+
+                    <div class="card-body">
+                        <!-- Pokémon Grid -->
+                        <div class="row row-cols-2 row-cols-sm-3 row-cols-md-6 g-3">
+
+                            {% for p in team.pokemon %}
+                            <div class="col">
+                                <div class="pokemon-card-mini strength-{{ p.strength_level }}">
+                                    <img src="{{ p.sprite }}" class="pokemon-sprite-sm" alt="{{ p.name }}">
+                                    <h6 class="mt-2 mb-1">#{{ p.id }} {{ p.name | capitalize }}</h6>
+                                    <div>
+                                        {% for t in p.types %}
+                                        <span class="type-badge type-{{ t }}">{{ t }}</span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                            {# Fill empty slots #}
+                            {% for i in range(6 - team.pokemon|length) %}
+                            <div class="col">
+                                <div class="pokemon-card-mini border-secondary-subtle">
+                                    <div class="d-flex align-items-center justify-content-center text-muted" style="height:100%;">
+                                        Empty Slot
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            {% endfor %}
+
+        </div>
+    {% else %}
+        <div class="alert alert-info">You have no teams to compare.</div>
+    {% endif %}
+
+</div>
+
+{% endblock %}

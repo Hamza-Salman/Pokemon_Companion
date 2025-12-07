@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+<h1 class="mb-4">Battle Helper</h1>
+
+<form action="/battle-helper" method="POST">
+
+    <!-- Search Input -->
+    <div class="mb-4">
+        <label class="form-label fw-bold">Search Pokemon</label>
+        <input type="text" id="pokemon-search" class="form-control" placeholder="Search... (e.g., Garchomp)">
+        <small class="text-muted">Filter the Pokémon list as you type.</small>
+    </div>
+
+    <!-- Single Pokemon Dropdown -->
+    <div class="mb-4">
+        <label class="form-label fw-bold">Select Opposing Pokemon</label>
+
+        <select name="opponent_pokemon" class="form-select pokemon-select" required>
+            <option value="" selected disabled>-- Select Pokemon --</option>
+
+            {% for pokemon in pokemons %}
+            <option value="{{ pokemon['name'] }}" data-name="{{ pokemon['name'] | lower }}">
+                {{ pokemon['id'] }} - {{ pokemon['name'] }}
+            </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <!-- Submit -->
+    <div class="text-center mt-4">
+        <button type="submit" class="btn btn-primary btn-lg px-5">
+            Find Best Counter
+        </button>
+    </div>
+
+</form>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+
+    /* ----------------------------
+       SEARCH FILTER FOR DROPDOWN
+    ---------------------------- */
+    const searchInput = document.getElementById("pokemon-search");
+    const options = document.querySelectorAll(".pokemon-select option");
+
+    searchInput.addEventListener("input", () => {
+        const term = searchInput.value.toLowerCase();
+
+        options.forEach(opt => {
+            // Keep placeholder visible
+            if (!opt.dataset.name) {
+                opt.hidden = false;
+                return;
+            }
+
+            opt.hidden = !opt.dataset.name.includes(term);
+        });
+    });
+
+});
+</script>
+
+{% endblock %}

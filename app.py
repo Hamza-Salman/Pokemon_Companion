@@ -1,5 +1,5 @@
 from flask import Flask, redirect, render_template, request, session
-from helpers import fetch_pokemon_generation, fetch_pokemon_data, fetch_evoltion_chain, query_db
+from helpers import fetch_pokemon_generation, fetch_pokemon_data, fetch_evoltion_chain, query_db, get_double_damage_from, get_half_damage_from
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -204,9 +204,56 @@ def team():
                 
         return render_template("/teams.html", teams=teams_data)
 
-@app.route("/battle-helper")
+@app.route("/battle-helper", methods=["GET", "POST"])
 def battle():
-    #TODO: 
+    if request.method == "POST":
+        opponent_pokemon = request.form.get("opponent_pokemon")
+        if not opponent_pokemon:
+            return render_template("/error.html", error="No Pokemon Selected")
+        else:
+
+            # Get opponent pokemon types
+            print(opponent_pokemon)
+            opponenet_data = fetch_pokemon_data(opponent_pokemon)
+            opponent_types = opponenet_data['types']
+            print(opponent_types)
+            double_effective_types = []
+            half_effective_types = []
+            for type in opponent_types:
+                double_effective_types += get_double_damage_from(type)
+                half_effective_types += get_half_damage_from(type)
+
+            #get user teams
+            teams = query_db("SELECT * FROM user_teams WHERE user_id = ?", (session["user_id"],))
+            teams_data = []
+            for team in teams:
+                team_id = team["id"]
+                team_name = team["team_name"]
+                pokemons = []
+                pokemons_names = query_db("SELECT * FROM team WHERE team_id = ?", (team_id,))
+                for index, pokemon in enumerate(pokemons_names):
+                    pokemon_data = fetch_pokemon_data(pokemon["pokemon_name"])
+                    if pokemon_data:
+
+                        # Analyze pokemon types for effectiveness
+                        pokemon_types = pokemon_data['types']
+                        for type in pokemon_types:
+                            if type in double_effective_types:
+                                pokemon_data["strength_level"] = "strong"
+                            elif type in half_effective_types:
+                                pokemon_data["strength_level"] = "weak"
+                            else:
+                                pokemon_data["strength_level"] = "neutral"
+
+                        pokemons.append(pokemon_data)
+                teams_data.append({"team_id": team_id, "team_name": team_name, "pokemon": pokemons})
+
+        return render_template("/helper-result.html", opponent=opponenet_data, teams=teams_data, double_effective_types=double_effective_types, half_effective_types=half_effective_types)
+    else:
+        pokemons = []
+        for i in range(1, NUM_GENS+1):
+                pokemons += fetch_pokemon_generation(i)
+        return render_template("/helper-input.html", pokemons=pokemons)
     return "Hello, World!"
 
 @app.route("/delete_team", methods=["POST"])

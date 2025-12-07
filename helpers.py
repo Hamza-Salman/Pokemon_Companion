@@ -146,6 +146,32 @@ def get_move_data(move_name):
         print(f"Error fetching move data for {move_name}: {e}")
         return None
 
+def get_double_damage_from(type_name):
+    url = f"https://pokeapi.co/api/v2/type/{type_name}/"
+
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        data = response.json()
+        double_damage_from = [t['name'] for t in data['damage_relations']['double_damage_from']]
+        return double_damage_from
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching type data for {type_name}: {e}")
+        return []
+    
+def get_half_damage_from(type_name):
+    url = f"https://pokeapi.co/api/v2/type/{type_name}/"
+
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
+        data = response.json()
+        half_damage_from = [t['name'] for t in data['damage_relations']['half_damage_from']]
+        return half_damage_from
+    except requests.exceptions.RequestException as e:
+        print(f"Error fetching type data for {type_name}: {e}")
+        return []
+
 def query_db(query, params=(), commit=False):
     connection = sqlite3.connect("pokemonCompanion.db")
     connection.row_factory = sqlite3.Row  # return rows as dict-like objects
