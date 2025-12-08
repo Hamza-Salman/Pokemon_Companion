@@ -1,18 +1,17 @@
 # Pokemon Companion
 
-The Pokemon Companion web app serves as a one stop shop to help you through your pokemon journey. It serves as a Pokedex to get information on specific pokemon as well as a battle helper to help you optimize your teams against tough opponents.
+The Pokemon Companion web app serves as my Final Project for CS50 2025. It is a one stop shop to help you through your pokemon journey. It serves as a Pokedex to get information on specific pokemon as well as a battle helper to help you optimize your teams against tough opponents.
 
 ## Table of Contents
 
 - [About](#about)  
 - [Motivation & Goals](#motivation--goals)  
-- [Key Features](#key-features)  
-- [Screenshots](#demo--screenshots)  
+- [Key Features](#key-features)
 - [Tech Stack & Dependencies](#tech-stack--dependencies)  
 - [Installation & Setup](#installation--setup)  
 - [Usage](#usage)  
 - [Project Structure](#project-structure)
-- [Project File Summaries](#project-file-structure)
+- [Project File Summaries](#project-file-summaries)
 - [PokeAPI Reference](#pokeapi-reference)
 - [Design Choices](#design-decisions--trade-offs)  
 - [Future Improvements](#future-improvements)
@@ -52,14 +51,6 @@ My goals were:
 - **Battle Helper** — Given an opponent Pokemon, the app analyzes your teams and highlights which Pokemon are strong / neutral / weak against that opponent.  
 - **Caching System** — Pokemon data is cached locally (JSON + SQLite) to avoid repeated API calls and improve performance.  
 - **Responsive Design** — Uses Bootstrap to adapt to different screen sizes (mobile → desktop).  
-
----
-
-## Demo / Screenshots
-
-*If you have screenshots or a deployed version, add them here (GIFs or images help a lot).*
-
-
 
 ---
 
@@ -135,6 +126,8 @@ My goals were:
 
 7. Visit the app in your browser: http://localhost:5000
 
+---
+
 ## Usage
 
 - **Anonymous users**: can browse the Pokedex, view Pokemon details.
@@ -144,6 +137,8 @@ My goals were:
 - On the Battle Helper page: select an opponent Pokemon → submit → see results with color-coded strength bars for each team’s Pokemon.
 
 - Teams can be viewed or deleted as needed via the “My Teams” page.
+
+---
 
 ## Project Structure
 ```
@@ -172,6 +167,8 @@ My goals were:
       styles.css
 ```
 
+---
+
 ## Project File Summaries
 
 `app.py` is the core of the Pokemon Companion application and defines **all Flask routes**, session configuration, page rendering, user authentication, team management, and the battle helper logic. It acts as the main controller for the entire project.
@@ -196,6 +193,8 @@ Files used for caching data
 - `pokemon_cache.json`: Used for storing all Pokemon data pulled from the API
 - `move_cache.json`: Used for storing all move data pulled from the API. This is necessary as move data is pulled from a seperate API call than the Pokemon API call. Otherwise there can be up to 249 different API calls for a single Pokemon. (The Pokemon Mew can learn 249 unique moves)
 - `not_found_cache.json`: Used for storing the names of pokemon that the API fails on. There are certain pokemon that the API fails to return data on. Might be because of server issues or missing data. However I have still included them in case that data gets fixed. There is a boolean constant in the `helpers.py` called `CHECK_NOT_FOUND` This can be changed to completely ignore the Pokemon that are not found by the API to improve performance of web pages. This is because if it was left as True, it would still make the api calls for all the Pokemon that are not found and slow down the loading of web pages.
+
+---
 
 ## PokeAPI Reference 
 
@@ -271,6 +270,8 @@ Gets data specific to a move. (example: type, power, accuracy, pp)
 
 Used to get strengths and weaknesses of a specific pokemon type. Used for the battle helper
 
+---
+
 ## Design Choices
 | Decision                                                 | Reason / Trade-off                                                                                                                       |
 | -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------- |
@@ -278,6 +279,8 @@ Used to get strengths and weaknesses of a specific pokemon type. Used for the ba
 | Client-side search / select for Pokémon lists            | Fast UI, no extra server calls. May be slow for very large lists on old devices — could optimize later with paging or virtualized lists. |
 | Simple strength classification (strong / neutral / weak) | Easy to implement and understand; not an exact calculation of all battle mechanics (stats, abilities, synergy).                          |
 | Cacheing Pokemon data rather than pulling from API on each call         | Enables faster load times and prevents throttling from the PokeAPI servers.                                                                               |
+
+---
 
 ## Future Improvements
 - Add type-chart calculation (resistances, immunities, dual-type interactions) for more accurate battle advice.
