@@ -191,7 +191,7 @@ def team():
         return render_template("/error.html", error="TODO")
     else:
         #get all the team data and the pokemon data for each team
-        teams = query_db("SELECT * FROM user_teams WHERE user_id = ?", (session["user_id"],))
+        teams = query_db("SELECT * FROM user_teams WHERE user_id = ? ORDER BY id DESC", (session["user_id"],))
         teams_data = []
         for team in teams:
             team_id = team["id"]

@@ -1,6 +1,7 @@
-# Pokemon Companion
+# POKEMON COMPANION
+#### Video Demo:  https://youtu.be/5X8gbLbEk6k
 
-The Pokemon Companion web app serves as my Final Project for CS50 2025. It is a one stop shop to help you through your pokemon journey. It serves as a Pokedex to get information on specific pokemon as well as a battle helper to help you optimize your teams against tough opponents.
+#### The Pokemon Companion web app serves as my Final Project for CS50 2025. It is a one stop shop to help you through your pokemon journey. It serves as a Pokedex to get information on specific pokemon as well as a battle helper to help you optimize your teams against tough opponents.
 
 ## Table of Contents
 
