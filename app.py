@@ -1,5 +1,5 @@
 from flask import Flask, redirect, render_template, request, session
-from helpers import fetch_pokemon_generation, fetch_pokemon_data, fetch_evoltion_chain, query_db, get_double_damage_from, get_half_damage_from
+from helpers import fetch_pokemon_generation, fetch_pokemon_data, fetch_evoltion_chain, query_db, get_double_damage_from, get_half_damage_from, load_cache
 from flask_session import Session
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -174,8 +174,10 @@ def create_team():
         return redirect("/teams")
     else:
         pokemons = []
-        for i in range(1, NUM_GENS+1):
-                pokemons += fetch_pokemon_generation(i)
+        cache = load_cache("pokemon_cache.json")
+        for i in cache:
+            pokemons.append(cache[i])
+        pokemons.sort(key=lambda x: x['id'])
         return render_template("/create-team.html", pokemons=pokemons)
 
 @app.route("/teams", methods=["GET", "POST"])
@@ -258,10 +260,11 @@ def battle():
         return render_template("/helper-result.html", opponent=opponenet_data, teams=teams_data, double_effective_types=double_effective_types, half_effective_types=half_effective_types)
     else:
         pokemons = []
-        for i in range(1, NUM_GENS+1):
-                pokemons += fetch_pokemon_generation(i)
+        cache = load_cache("pokemon_cache.json")
+        for i in cache:
+            pokemons.append(cache[i])
+        pokemons.sort(key=lambda x: x['id'])
         return render_template("/helper-input.html", pokemons=pokemons)
-    return "Hello, World!"
 
 @app.route("/delete_team", methods=["POST"])
 def delete_team():
