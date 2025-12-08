@@ -13,7 +13,7 @@ The Pokemon Companion web app serves as my Final Project for CS50 2025. It is a 
 - [Project Structure](#project-structure)
 - [Project File Summaries](#project-file-summaries)
 - [PokeAPI Reference](#pokeapi-reference)
-- [Design Choices](#design-decisions--trade-offs)  
+- [Design Choices](#design-choices)  
 - [Future Improvements](#future-improvements)
 
 ---
