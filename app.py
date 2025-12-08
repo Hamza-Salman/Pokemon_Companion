@@ -206,6 +206,10 @@ def team():
 
 @app.route("/battle-helper", methods=["GET", "POST"])
 def battle():
+
+    if not session:
+        return redirect("/login")
+
     if request.method == "POST":
         opponent_pokemon = request.form.get("opponent_pokemon")
         if not opponent_pokemon:
@@ -222,6 +226,9 @@ def battle():
             for type in opponent_types:
                 double_effective_types += get_double_damage_from(type)
                 half_effective_types += get_half_damage_from(type)
+
+            double_effective_types = list(set(double_effective_types))
+            half_effective_types = list(set(half_effective_types))
 
             #get user teams
             teams = query_db("SELECT * FROM user_teams WHERE user_id = ?", (session["user_id"],))

@@ -2,17 +2,54 @@
 
 {% block main %}
 
+<style>
+    .auth-card {
+        max-width: 460px;
+        margin: auto;
+        padding: 30px;
+        border-radius: 20px;
+        background: white;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-top: 40px;
+    }
+</style>
+
+<div class="auth-card">
+    <h2 class="text-center mb-4 fw-bold">Create an Account</h2>
+
     <form action="/register" method="post">
+
         <div class="mb-3">
-            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="username" placeholder="Username" type="text">
+            <input autocomplete="off"
+                   autofocus
+                   class="form-control"
+                   name="username"
+                   placeholder="Username"
+                   type="text">
         </div>
+
         <div class="mb-3">
-            <input class="form-control mx-auto w-auto" name="password" placeholder="Password" type="password">
+            <input class="form-control"
+                   name="password"
+                   placeholder="Password"
+                   type="password">
         </div>
-        <div class="mb-3">
-            <input class="form-control mx-auto w-auto" name="confirmation" placeholder="Password (again)" type="password">
+
+        <div class="mb-4">
+            <input class="form-control"
+                   name="confirmation"
+                   placeholder="Confirm Password"
+                   type="password">
         </div>
-        <button class="btn btn-primary" type="submit">Register</button>
+
+        <button class="btn btn-primary w-100" type="submit">Register</button>
+
+        <p class="text-center mt-3 mb-0">
+            Already have an account?
+            <a href="/login">Log in</a>
+        </p>
+
     </form>
+</div>
 
 {% endblock %}

@@ -2,11 +2,57 @@
 
 {% block main %}
 
-<h1>Welcome to the Pokemon Companion App</h1>
-{% if session["user_id"] %}
-    <h2>User: {{ session["username"] }} </h2>
-{% endif %}
-<p>The pokemon companion app is a project that I am working on as my final project for Harvard's CS50 Course</p>
-<h2>Key Features</h2>
+<style>
+    .feature-card {
+        border-radius: 15px;
+        padding: 20px;
+        background: white;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+</style>
+
+<div class="container py-4">
+
+    <!-- Welcome Header -->
+    <div class="text-center mb-4">
+        <h1 class="fw-bold">Welcome to the Pokémon Companion App</h1>
+
+        {% if session.get("user_id") %}
+        <h5 class="text-muted mt-2">Logged in as <strong>{{ session["username"] }}</strong></h5>
+        {% endif %}
+        <h5 class="text-muted mt-2">Created by: Hamza Salman</h5>
+        <h5 class="text-muted mt-2">CS50 Final Project</h5>
+        <h5 class="text-muted mt-2">
+            View the full project on 
+            <a href="https://github.com/Hamza-Salman/Pokemon_Companion" target="_blank" class="link-primary">
+                GitHub
+            </a>
+        </h5>
+    </div>
+
+    <!-- Introduction Card -->
+    <div class="feature-card mb-4">
+        <p class="fs-5">
+            The Pokémon Companion App is a full-stack project built as part of Harvard’s CS50 course.
+            It provides tools to explore Pokémon data, build teams, and gain strategic insights for battles.
+        </p>
+    </div>
+
+    <!-- Features List -->
+    <div class="feature-card">
+        <h3 class="fw-bold mb-3">Key Features</h3>
+
+        <ul class="fs-5">
+            <li><strong>Pokedex</strong> — browse all Pokémon by generation with clean sprite displays.</li>
+            <li><strong>Detailed Pokémon Pages</strong> —
+                see types, abilities, complete move tables, and evolution chains.</li>
+            <li><strong>Team Builder</strong> —
+                logged-in users can create and save multiple teams of up to six Pokémon.</li>
+            <li><strong>Battle Helper</strong> —
+                select an opponent Pokémon, and the app determines which Pokémon from each team has the best matchup.</li>
+        </ul>
+    </div>
+
+</div>
 
 {% endblock %}

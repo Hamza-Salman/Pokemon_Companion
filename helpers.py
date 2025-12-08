@@ -7,6 +7,9 @@ import sqlite3
 
 POKEMON_CACHE_FILE = "pokemon_cache.json"
 MOVE_CACHE_FILE = "move_cache.json"
+NOT_FOUND_CACHE_FILE = "not_found_cache.json"
+
+CHECK_NOT_FOUND = False
 
 
 def load_cache(file):
@@ -42,8 +45,14 @@ def fetch_pokemon_data(pokemon_name):
 
     pokemon_cache = load_cache(POKEMON_CACHE_FILE)
 
+    not_found_cache = load_cache(NOT_FOUND_CACHE_FILE)
+
     if pokemon_name in pokemon_cache:
         return pokemon_cache[pokemon_name]
+    
+    if pokemon_name in not_found_cache and not CHECK_NOT_FOUND:
+        print(f"{pokemon_name} found in not found cache. Skipping API call.")
+        return None
 
     url = f"https://pokeapi.co/api/v2/pokemon/{pokemon_name}/"
 
@@ -67,6 +76,10 @@ def fetch_pokemon_data(pokemon_name):
 
         return pokemon_info
     except requests.exceptions.RequestException as e:
+
+        not_found_cache[pokemon_name] = pokemon_name
+        save_cache(not_found_cache, NOT_FOUND_CACHE_FILE)
+
         print(f"Error fetching data for {pokemon_name}: {e}")
         return None
     

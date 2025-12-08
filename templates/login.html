@@ -2,14 +2,47 @@
 
 {% block main %}
 
+<style>
+    .auth-card {
+        max-width: 420px;
+        margin: auto;
+        padding: 30px;
+        border-radius: 20px;
+        background: white;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-top: 40px;
+    }
+</style>
+
+<div class="auth-card">
+    <h2 class="text-center mb-4 fw-bold">Login</h2>
+
     <form action="/login" method="post">
+
         <div class="mb-3">
-            <input autocomplete="off" autofocus class="form-control mx-auto w-auto" name="username" placeholder="Username" type="text">
+            <input autocomplete="off"
+                   autofocus
+                   class="form-control"
+                   name="username"
+                   placeholder="Username"
+                   type="text">
         </div>
-        <div class="mb-3">
-            <input class="form-control mx-auto w-auto" name="password" placeholder="Password" type="password">
+
+        <div class="mb-4">
+            <input class="form-control"
+                   name="password"
+                   placeholder="Password"
+                   type="password">
         </div>
-        <button class="btn btn-primary" type="submit">Log In</button>
+
+        <button class="btn btn-primary w-100" type="submit">Log In</button>
+
+        <p class="text-center mt-3 mb-0">
+            Don't have an account?
+            <a href="/register">Register here</a>
+        </p>
+
     </form>
+</div>
 
 {% endblock %}
